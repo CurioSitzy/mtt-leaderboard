@@ -558,6 +558,10 @@
                     <option value="AE">After Effects (AE)</option>
                     <option value="AM">Alight Motion (AM)</option>
                     <option value="IS">InShot (IS)</option>
+                    <!-- Tambahan Opsi Software Baru -->
+                    <option value="HF">HitFilm (HF)</option>
+                    <option value="CPC">CapCut PC (CPC)</option>
+                    <option value="PR">Premiere Pro (PR)</option>
                 </select>
 
                 <select id="tierFilter" class="filter-select" onchange="renderLeaderboard()">
@@ -616,6 +620,9 @@
             "AE": "After Effects",
             "AM": "Alight Motion",
             "IS": "InShot",
+            "HF": "HitFilm",
+            "CPC": "CapCut PC",
+            "PR": "Premiere Pro",
             "-": "Unknown / Not Specified"
         };
 
@@ -625,17 +632,20 @@
             { id: 1,  name: "Vantrex",                     tier: "HT3", overallRank: 1, software: "NV", youtube: "https://www.youtube.com/@Vantrex-edits", avatar: "https://yt3.googleusercontent.com/feiO7qUk7IN62bwp1gsW-uzjVcsLnHl-KJVTIfPDS0TPMYEBZmI_EnNR0nHCU5CRgKW3Iqvyfg=s160-c-k-c0x00ffffff-no-rj" },
             { id: 2,  name: "Channeling_Editz",            tier: "MT3", overallRank: 2, software: "CC", youtube: "https://www.youtube.com/@Channeling_Editz", avatar: "https://yt3.googleusercontent.com/OuBIPxoaYxGVHyv6EwF3kQmt-MXtbK51XqQEjXssWzX-MwV9XuHSEGRysc3A3cP0LCC-UpeFJA=s160-c-k-c0x00ffffff-no-rj" },
             { id: 4,  name: "Rustic AEP7",                 tier: "MT3", overallRank: 2, software: "AE", youtube: "https://www.youtube.com/@Rustic.aep7-h3w", avatar: "https://yt3.googleusercontent.com/c8V82FcTNsxBfh7USGQJH5SrsuT6vxlC6rldf6o_qXt8F0Cgy-SDoDYYsuJhcjzxiYsmLLu3nQ=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 3,  name: "ZYPEX",                       tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@ZYPEXEAMV", avatar: "https://yt3.googleusercontent.com/BWZF1mI1Ez3Boj40kiBPRiSpRfJXr7FfrPWx5B6UgAIgzNw5JZzXAGMakB_CfsGThmx3HTKoS50=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 4,  name: "Zynx AEFX",                   tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@zynxeditz_aefx", avatar: "https://yt3.googleusercontent.com/22dEA87I63LVva93qRebZM8U709sIbWdTM7tDwtfWJWwm_oWqOORRmxRRk-YnPaBJ8BjU13JyE0=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 5,  name: "Spooky",                      tier: "LT3", overallRank: 3, software: "AM", youtube: "https://www.youtube.com/@spooky_editss", avatar: "https://yt3.googleusercontent.com/ofGueTCmx0LzKxamBUuWUY0nb3qltDDqPdldpLp9hqa9ydDbBjScQ8UjRypXptNLndNOKcis=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 6,  name: "Blue",                        tier: "LT2", overallRank: 4, software: "AM", youtube: "https://www.youtube.com/@bluee_editt", avatar: "https://yt3.googleusercontent.com/aFpWopgj1WAZVaagUJRGX1B6ieKg20OskcBIxHVu0JqoS2wemOMgunrr0n5JyJj5z9Sb0j9i=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 7,  name: "swagedd",                     tier: "HT4", overallRank: 5, software: "CC", youtube: "https://www.youtube.com/@Swagedd", avatar: "https://yt3.googleusercontent.com/YiEGJBSE1zsHamO-lVXvdaAqaggtT6iEPEQKKiWT1UIoanXwDzvI60QgSORsWnYaMGHuwFhnXw=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 8,  name: "SwiftMC",                     tier: "HT4", overallRank: 5, software: "CC", youtube: "https://www.youtube.com/@NotSwiftMC", avatar: "https://yt3.googleusercontent.com/FRjAnnb6YNKgzsZckAnVIjboVT-XoyKtsMCT1F2suRb9f1X0Ij115CmpIouJk3a0jM79QBdYKCA=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 9,  name: "Ketomaki_MC",                 tier: "MT4", overallRank: 6, software: "CC", youtube: "https://www.youtube.com/@Ketomaki_MC", avatar: "https://yt3.googleusercontent.com/kR5fBSrk1T5ZFTHvbDznbf1kDuJaaYnFafzgL4Q6D2NEEBogWgSYQ-Rkaj-objE8Kp5IAnzW6xc=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 10, name: "Galaxy_Fx",                   tier: "LT4", overallRank: 7, software: "CC", youtube: "https://www.youtube.com/@GALAXYFX-db4", avatar: "https://yt3.googleusercontent.com/efkGOEd-Ct5dA_XVtHEzVFP0QTZ5aKLJSzhKidfQU22-rhYBks083mBKHwZu-OphfGhUntb20Ho=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 11, name: "ImShriXD",                    tier: "LT4", overallRank: 7, software: "IS", youtube: "https://www.youtube.com/@loose_wires", avatar: "https://yt3.googleusercontent.com/XaS6xAHJa2kLbEXAQ-utIMK618bviuxs5cpxT2_bh4DzpLf2rkvxCwZfzjebXUZTQd1CdPZ5M5k=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 12, name: "NØRıKO",                      tier: "LT4", overallRank: 7, software:  "-", youtube:  "https://www.youtube.com/@vantaamc", avatar: "https://yt3.googleusercontent.com/N0hprpUVt6rZEMPGKyoytNxLmCfg_e-0LIxYmvhMoGXTAd52T7DEQzDudmWXVRo-CRXmYdC_Qw=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 13, name: "NotAbyss",                    tier: "LT5", overallRank: 8, software: "CC", youtube: "https://www.youtube.com/@NotAbyssOG", avatar: "https://yt3.googleusercontent.com/H_BWyEHpqOF2KuZpnjPphkoSnLSKpXXfNF2L80hP_Yzo0xWLph7yxzay5Wa4fBcmaywnhPCB=s160-c-k-c0x00ffffff-no-rj" }
+            { id: 3,  name: "ZYPEX",                         tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@ZYPEXEAMV", avatar: "https://yt3.googleusercontent.com/BWZF1mI1Ez3Boj40kiBPRiSpRfJXr7FfrPWx5B6UgAIgzNw5JZzXAGMakB_CfsGThmx3HTKoS50=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 4,  name: "Zynx AEFX",                    tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@zynxeditz_aefx", avatar: "https://yt3.googleusercontent.com/22dEA87I63LVva93qRebZM8U709sIbWdTM7tDwtfWJWwm_oWqOORRmxRRk-YnPaBJ8BjU13JyE0=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 5,  name: "Spooky",                       tier: "LT3", overallRank: 3, software: "AM", youtube: "https://www.youtube.com/@spooky_editss", avatar: "https://yt3.googleusercontent.com/ofGueTCmx0LzKxamBUuWUY0nb3qltDDqPdldpLp9hqa9ydDbBjScQ8UjRypXptNLndNOKcis=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 6,  name: "Blue",                         tier: "LT2", overallRank: 4, software: "AM", youtube: "https://www.youtube.com/@bluee_editt", avatar: "https://yt3.googleusercontent.com/aFpWopgj1WAZVaagUJRGX1B6ieKg20OskcBIxHVu0JqoS2wemOMgunrr0n5JyJj5z9Sb0j9i=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 7,  name: "swagedd",                      tier: "HT4", overallRank: 5, software: "CC", youtube: "https://www.youtube.com/@Swagedd", avatar: "https://yt3.googleusercontent.com/YiEGJBSE1zsHamO-lVXvdaAqaggtT6iEPEQKKiWT1UIoanXwDzvI60QgSORsWnYaMGHuwFhnXw=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 8,  name: "SwiftMC",                      tier: "HT4", overallRank: 5, software: "CC", youtube: "https://www.youtube.com/@NotSwiftMC", avatar: "https://yt3.googleusercontent.com/FRjAnnb6YNKgzsZckAnVIjboVT-XoyKtsMCT1F2suRb9f1X0Ij115CmpIouJk3a0jM79QBdYKCA=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 9,  name: "Ketomaki_MC",                   tier: "MT4", overallRank: 6, software: "CC", youtube: "https://www.youtube.com/@Ketomaki_MC", avatar: "https://yt3.googleusercontent.com/kR5fBSrk1T5ZFTHvbDznbf1kDuJaaYnFafzgL4Q6D2NEEBogWgSYQ-Rkaj-objE8Kp5IAnzW6xc=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 10, name: "Galaxy_Fx",                    tier: "LT4", overallRank: 7, software: "CC", youtube: "https://www.youtube.com/@GALAXYFX-db4", avatar: "https://yt3.googleusercontent.com/efkGOEd-Ct5dA_XVtHEzVFP0QTZ5aKLJSzhKidfQU22-rhYBks083mBKHwZu-OphfGhUntb20Ho=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 11, name: "ImShriXD",                     tier: "LT4", overallRank: 7, software: "IS", youtube: "https://www.youtube.com/@loose_wires", avatar: "https://yt3.googleusercontent.com/XaS6xAHJa2kLbEXAQ-utIMK618bviuxs5cpxT2_bh4DzpLf2rkvxCwZfzjebXUZTQd1CdPZ5M5k=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 12, name: "NØRıKO",                       tier: "LT4", overallRank: 7, software:  "-", youtube:  "https://www.youtube.com/@vantaamc", avatar: "https://yt3.googleusercontent.com/N0hprpUVt6rZEMPGKyoytNxLmCfg_e-0LIxYmvhMoGXTAd52T7DEQzDudmWXVRo-CRXmYdC_Qw=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 13, name: "NotAbyss",                     tier: "LT5", overallRank: 8, software: "CC", youtube: "https://www.youtube.com/@NotAbyssOG", avatar: "https://yt3.googleusercontent.com/H_BWyEHpqOF2KuZpnjPphkoSnLSKpXXfNF2L80hP_Yzo0xWLph7yxzay5Wa4fBcmaywnhPCB=s160-c-k-c0x00ffffff-no-rj" },
+            /* Tambahan Data Editor Contoh */
+            { id: 14, name: "HazaAE",                      tier: "HT2", overallRank: 1, software: "AE", youtube: "https://www.youtube.com", avatar: "" },
+            { id: 15, name: "ZynxVisuals",                 tier: "HT3", overallRank: 2, software: "PR", youtube: "https://www.youtube.com", avatar: "" }
         ];
 
         function getTierClass(tier) {
