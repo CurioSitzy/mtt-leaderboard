@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTT - Leaderboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #f1f5f9;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* CONTAINER DIPISAH DARI BODY AGAR FULLSCREEN TIDAK TERPOTONG */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .main-container.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* BACKGROUND GLOW DECORATIONS */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        body::before {
+            top: 50px;
+            left: 5%;
+            background: #f3e8c8;
+        }
+
+        body::after {
+            top: 200px;
+            right: 5%;
+            background: #5865f2;
+        }
+
+        /* HEADER SECTION */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container {
+            margin-bottom: 12px;
+        }
+
+        .custom-logo {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 18px rgba(212, 175, 55, 0.45));
+            transition: transform 0.3s ease;
+        }
+
+        .custom-logo:hover {
+            transform: scale(1.05);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #f3e8c8;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+            margin-bottom: 4px;
+            font-weight: 800;
+            transition: color 0.3s ease;
+        }
+
+        header p {
+            color: #64748b;
+            font-size: 0.88rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* INTRO LAYOUT */
+        .intro-container {
+            display: grid;
+            grid-template-columns: 260px 1fr 260px;
+            gap: 16px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 900px) {
+            .intro-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .intro-card {
+            background: linear-gradient(135deg, #11131a 0%, #171b26 100%);
+            border: 1px solid #1e2330;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .intro-side-left { border-left: 3px solid #ef4444; }
+        .intro-banner-main { border-left: 4px solid #f3e8c8; }
+        .intro-side-right { border-left: 3px solid #3b82f6; }
+
+        .intro-card h2, .intro-card h3 {
+            font-size: 1.1rem;
+            color: #f3e8c8;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .intro-banner-main h2 { font-size: 1.3rem; }
+
+        .intro-card p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .mini-badge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .mini-badge-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .mini-tag {
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .tag-ht { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .tag-mt { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .tag-lt { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+
+        /* CONTROLS BAR */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111319;
+            border: 1px solid #1e222d;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .controls-left {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box input, .filter-select {
+            padding: 9px 16px;
+            border-radius: 8px;
+            border: 1px solid #232733;
+            background-color: #090a0e;
+            color: #f3e8c8;
+            outline: none;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input { width: 220px; }
+        .filter-select { cursor: pointer; }
+        .search-box input:focus, .filter-select:focus { border-color: #3b82f6; }
+
+        .discord-btn {
+            background-color: #5865f2;
+            color: #ffffff;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s, transform 0.15s;
+            font-size: 0.88rem;
+        }
+
+        .discord-btn:hover {
+            background-color: #4752c4;
+            transform: translateY(-1px);
+        }
+
+        .total-counter {
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+
+        .total-counter strong { color: #f3e8c8; }
+
+        /* CARD LIST */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInList {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-active { animation: fadeInList 0.35s ease-out forwards; }
+
+        .participant-card {
+            background-color: #11131a;
+            border: 1px solid #1d212b;
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .participant-card:hover {
+            border-color: #2e3547;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes goldGlow {
+            0% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+            50% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.5); }
+            100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        }
+
+        .participant-card.top-1 {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, #11131a 100%);
+            animation: goldGlow 3s infinite ease-in-out;
+        }
+
+        .participant-card.top-2 {
+            border-color: rgba(148, 163, 184, 0.4);
+            background: linear-gradient(90deg, rgba(148, 163, 184, 0.05) 0%, #11131a 100%);
+        }
+
+        .participant-card.top-3 {
+            border-color: rgba(180, 83, 9, 0.4);
+            background: linear-gradient(90deg, rgba(180, 83, 9, 0.05) 0%, #11131a 100%);
+        }
+
+        .left-group { display: flex; align-items: center; gap: 16px; }
+
+        .rank-icon-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            border: 1px solid #232733;
+            background: #171a23;
+            color: #94a3b8;
+        }
+
+        .rank-1 { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        .rank-2 { background: rgba(148, 163, 184, 0.12); color: #e2e8f0; border-color: rgba(148, 163, 184, 0.4); }
+        .rank-3 { background: rgba(180, 83, 9, 0.12); color: #f97316; border-color: rgba(180, 83, 9, 0.4); }
+
+        .avatar-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #1e222d;
+            border: 1px solid #282d3c;
+            flex-shrink: 0;
+        }
+
+        .user-details { display: flex; flex-direction: column; gap: 2px; }
+        .user-header { display: flex; align-items: center; gap: 8px; }
+
+        .user-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            letter-spacing: 0.2px;
+        }
+
+        .software-badge {
+            background: #b45309;
+            color: #fef3c7;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: help;
+        }
+
+        .user-points {
+            font-size: 0.82rem;
+            color: #64748b;
+            font-weight: 500;
+            cursor: help;
+            width: fit-content;
+        }
+
+        .right-group { display: flex; align-items: center; gap: 16px; }
+
+        .tier-pill {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tier-ht { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .tier-mt { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .tier-lt { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        .watch-btn {
+            background-color: #cc0000;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, transform 0.15s;
+            flex-shrink: 0;
+        }
+
+        .watch-btn:hover {
+            background-color: #ff0000;
+            transform: scale(1.02);
+        }
+
+        /* FULLSCREEN MODAL FIX & ANIMATIONS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: #11131a;
+            border: 1px solid #5865f2;
+            border-radius: 14px;
+            padding: 28px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(88, 101, 242, 0.3);
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card h3 {
+            color: #f3e8c8;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .modal-card p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            margin-bottom: 18px;
+        }
+
+        .discord-link-box {
+            background: #090a0e;
+            border: 1px solid #232733;
+            padding: 10px;
+            border-radius: 8px;
+            color: #5865f2;
+            font-weight: bold;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin-bottom: 18px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 9px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .btn-join { background: #5865f2; color: #fff; }
+        .btn-close { background: #232733; color: #cbd5e1; }
+        .btn-join:hover { background: #4752c4; }
+        .btn-close:hover { background: #2e3547; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container" id="mainContainer">
+        <header>
+            <div class="logo-container">
+                <img src="MTT.png" alt="MTT Logo" class="custom-logo" onerror="this.style.display='none'">
+            </div>
+            <h1 id="mainTitle">MTT LEADERBOARD</h1>
+            <p id="subTitle">Participant Rankings & Performance</p>
+        </header>
+
+        <div class="intro-container">
+            <div class="intro-card intro-side-left">
+                <h3>Tier Structure</h3>
+                <div class="mini-badge-list">
+                    <div class="mini-badge-item">
+                        <span class="mini-tag tag-ht">HT</span>
+                        <span style="color: #94a3b8;">High Tier (Top Elite)</span>
+                    </div>
+                    <div class="mini-badge-item">
+                        <span class="mini-tag tag-mt">MT</span>
+                        <span style="color: #94a3b8;">Mid Tier (Advanced)</span>
+                    </div>
+                    <div class="mini-badge-item">
+                        <span class="mini-tag tag-lt">LT</span>
+                        <span style="color: #94a3b8;">Low Tier (Rising)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-card intro-banner-main">
+                <h2>What is MTT Tierlist?</h2>
+                <p>MTT Tierlist is a community-driven ranking platform designed to evaluate and display the skill levels, ranking points, and preferred editing software of community creators. Explore participant tiers ranging from High Tier (HT) to Low Tier (LT) and track performance across various software platforms.</p>
+            </div>
+
+            <div class="intro-card intro-side-right">
+                <h3>Popular Software</h3>
+                <div class="mini-badge-list">
+                    <div class="mini-badge-item">
+                        <span style="color: #f1f5f9; font-weight: 600;">After Effects</span>
+                        <span style="color: #64748b; font-size: 0.75rem;">AE</span>
+                    </div>
+                    <div class="mini-badge-item">
+                        <span style="color: #f1f5f9; font-weight: 600;">Node Video</span>
+                        <span style="color: #64748b; font-size: 0.75rem;">NV</span>
+                    </div>
+                    <div class="mini-badge-item">
+                        <span style="color: #f1f5f9; font-weight: 600;">CapCut</span>
+                        <span style="color: #64748b; font-size: 0.75rem;">CC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="controls-left">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search participant..." onkeyup="renderLeaderboard()">
+                </div>
+                
+                <select id="softwareFilter" class="filter-select" onchange="renderLeaderboard()">
+                    <option value="ALL">All Software</option>
+                    <option value="NV">Node Video (NV)</option>
+                    <option value="CC">CapCut (CC)</option>
+                    <option value="AE">After Effects (AE)</option>
+                    <option value="AM">Alight Motion (AM)</option>
+                    <option value="IS">InShot (IS)</option>
+                </select>
+
+                <select id="tierFilter" class="filter-select" onchange="renderLeaderboard()">
+                    <option value="ALL">All Tiers</option>
+                    <option value="HT">High Tier (HT)</option>
+                    <option value="MT">Mid Tier (MT)</option>
+                    <option value="LT">Low Tier (LT)</option>
+                </select>
+
+                <button class="discord-btn" onclick="openDiscordModal()">
+                    <svg width="18" height="14" viewBox="0 0 127.14 96.36" fill="currentColor">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74c6.51,0,11.6,5.77,11.43,12.74C53.88,60,48.83,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74c6.5,0,11.59,5.77,11.43,12.74C96.12,60,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    Discord Server
+                </button>
+            </div>
+            <div class="total-counter">
+                Total Participants: <strong id="totalCount">0</strong>
+            </div>
+        </div>
+
+        <div class="leaderboard-list" id="leaderboardList"></div>
+    </div>
+
+    <!-- MODAL DISCORD LENGKAP -->
+    <div class="modal-overlay" id="discordModal" onclick="handleOverlayClick(event)">
+        <div class="modal-card">
+            <h3>Join Our Discord!</h3>
+            <p>Connect with other editors, participate in community events, and stay updated.</p>
+            <div class="discord-link-box">https://discord.gg/nKvkjKxfpX</div>
+            <div class="modal-actions">
+                <a href="https://discord.gg/nKvkjKxfpX" target="_blank" class="modal-btn btn-join">Open Discord</a>
+                <button class="modal-btn btn-close" onclick="closeDiscordModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('mainContainer').classList.add('loaded');
+            }, 50);
+        });
+
+        const tierPointsMap = {
+            "HT1": 60, "MT1": 52.5, "LT1": 45,
+            "HT2": 30, "MT2": 25,   "LT2": 20,
+            "HT3": 10, "MT3": 8,    "LT3": 6,
+            "HT4": 4,  "MT4": 3.5,  "LT4": 3,
+            "HT5": 2,  "MT5": 1.5,  "LT5": 1
+        };
+
+        const softwareFullNameMap = {
+            "NV": "Node Video",
+            "CC": "CapCut",
+            "AE": "After Effects",
+            "AM": "Alight Motion",
+            "IS": "InShot",
+            "-": "Unknown / Not Specified"
+        };
+
+        const defaultAvatar = "https://i.imgur.com/6VBx3io.png";
+
+        const participants = [
+            { id: 1,  name: "Vantrex",                 tier: "HT3", overallRank: 1, software: "NV", youtube: "https://www.youtube.com/@Vantrex-edits", avatar: "https://yt3.googleusercontent.com/feiO7qUk7IN62bwp1gsW-uzjVcsLnHl-KJVTIfPDS0TPMYEBZmI_EnNR0nHCU5CRgKW3Iqvyfg=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 2,  name: "Channeling_Editz",            tier: "MT3", overallRank: 2, software: "CC", youtube: "https://www.youtube.com/@Channeling_Editz", avatar: "https://yt3.googleusercontent.com/OuBIPxoaYxGVHyv6EwF3kQmt-MXtbK51XqQEjXssWzX-MwV9XuHSEGRysc3A3cP0LCC-UpeFJA=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 3,  name: "ZYPEX",                       tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@ZYPEXEAMV", avatar: "https://yt3.googleusercontent.com/BWZF1mI1Ez3Boj40kiBPRiSpRfJXr7FfrPWx5B6UgAIgzNw5JZzXAGMakB_CfsGThmx3HTKoS50=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 4,  name: "Zynx AEFX",                   tier: "LT3", overallRank: 3, software: "AE", youtube: "https://www.youtube.com/@zynxeditz_aefx", avatar: "https://yt3.googleusercontent.com/22dEA87I63LVva93qRebZM8U709sIbWdTM7tDwtfWJWwm_oWqOORRmxRRk-YnPaBJ8BjU13JyE0=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 5,  name: "Spooky",                      tier: "LT3", overallRank: 3, software: "AM", youtube: "https://www.youtube.com/@spooky_editss", avatar: "https://yt3.googleusercontent.com/ofGueTCmx0LzKxamBUuWUY0nb3qltDDqPdldpLp9hqa9ydDbBjScQ8UjRypXptNLndNOKcis=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 6,  name: "swagedd",                     tier: "HT4", overallRank: 4, software: "CC", youtube: "https://www.youtube.com/@Swagedd", avatar: "https://yt3.googleusercontent.com/YiEGJBSE1zsHamO-lVXvdaAqaggtT6iEPEQKKiWT1UIoanXwDzvI60QgSORsWnYaMGHuwFhnXw=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 7,  name: "SwiftMC",                     tier: "HT4", overallRank: 4, software: "CC", youtube: "https://www.youtube.com/@NotSwiftMC", avatar: "https://yt3.googleusercontent.com/FRjAnnb6YNKgzsZckAnVIjboVT-XoyKtsMCT1F2suRb9f1X0Ij115CmpIouJk3a0jM79QBdYKCA=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 8,  name: "Ketomaki_MC",                 tier: "MT4", overallRank: 5, software: "CC", youtube: "https://www.youtube.com/@Ketomaki_MC", avatar: "https://yt3.googleusercontent.com/kR5fBSrk1T5ZFTHvbDznbf1kDuJaaYnFafzgL4Q6D2NEEBogWgSYQ-Rkaj-objE8Kp5IAnzW6xc=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 9,  name: "Galaxy_Fx",                   tier: "LT4", overallRank: 6, software: "CC", youtube: "https://www.youtube.com/@GALAXYFX-db4", avatar: "https://yt3.googleusercontent.com/efkGOEd-Ct5dA_XVtHEzVFP0QTZ5aKLJSzhKidfQU22-rhYBks083mBKHwZu-OphfGhUntb20Ho=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 10, name: "ImShriXD",                    tier: "LT4", overallRank: 6, software: "IS", youtube: "https://www.youtube.com/@loose_wires", avatar: "https://yt3.googleusercontent.com/XaS6xAHJa2kLbEXAQ-utIMK618bviuxs5cpxT2_bh4DzpLf2rkvxCwZfzjebXUZTQd1CdPZ5M5k=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 11, name: "NØRıKO",                      tier: "LT4", overallRank: 6, software:  "-", youtube:  "https://www.youtube.com/@vantaamc", avatar: "https://yt3.googleusercontent.com/N0hprpUVt6rZEMPGKyoytNxLmCfg_e-0LIxYmvhMoGXTAd52T7DEQzDudmWXVRo-CRXmYdC_Qw=s160-c-k-c0x00ffffff-no-rj" },
+            { id: 12, name: "NotAbyss",                    tier: "LT5", overallRank: 7, software: "CC", youtube: "https://www.youtube.com/@NotAbyssOG", avatar: "https://yt3.googleusercontent.com/H_BWyEHpqOF2KuZpnjPphkoSnLSKpXXfNF2L80hP_Yzo0xWLph7yxzay5Wa4fBcmaywnhPCB=s160-c-k-c0x00ffffff-no-rj" }
+        ];
+
+        function getTierClass(tier) {
+            if (tier.startsWith("HT")) return "tier-ht";
+            if (tier.startsWith("MT")) return "tier-mt";
+            return "tier-lt";
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboardList');
+            
+            container.classList.remove('fade-in-active');
+            void container.offsetWidth; 
+
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const selectedSoftware = document.getElementById('softwareFilter').value;
+            const selectedTier = document.getElementById('tierFilter').value;
+
+            const mainTitle = document.getElementById('mainTitle');
+            const subTitle = document.getElementById('subTitle');
+            
+            if (selectedSoftware !== 'ALL') {
+                const swName = softwareFullNameMap[selectedSoftware] || selectedSoftware;
+                mainTitle.innerText = `MTT ${swName.toUpperCase()} LEADERBOARD`;
+                subTitle.innerText = `${swName} Editor Rankings & Performance`;
+            } else {
+                mainTitle.innerText = "MTT LEADERBOARD";
+                subTitle.innerText = "Participant Rankings & Performance";
+            }
+
+            container.innerHTML = '';
+
+            let filteredList = participants.filter(p => {
+                const matchesSoftware = (selectedSoftware === 'ALL') || (p.software === selectedSoftware);
+                const matchesTier = (selectedTier === 'ALL') || p.tier.startsWith(selectedTier);
+                return matchesSoftware && matchesTier;
+            });
+
+            filteredList.sort((a, b) => a.overallRank - b.overallRank);
+
+            let currentDynamicRank = 1;
+            const dynamicRankedList = filteredList.map((item, index) => {
+                if (index > 0) {
+                    const prevPoints = tierPointsMap[filteredList[index - 1].tier] || 0;
+                    const currPoints = tierPointsMap[item.tier] || 0;
+                    if (currPoints < prevPoints) {
+                        currentDynamicRank = index + 1;
+                    }
+                }
+                return { ...item, dynamicRank: currentDynamicRank };
+            });
+
+            const finalDisplayList = dynamicRankedList.filter(p => p.name.toLowerCase().includes(searchQuery));
+
+            finalDisplayList.forEach(p => {
+                const points = tierPointsMap[p.tier] || 0;
+                const softwareFull = softwareFullNameMap[p.software] || p.software;
+                
+                let rankClass = '';
+                let cardTopClass = '';
+
+                if (p.dynamicRank === 1) {
+                    rankClass = 'rank-1'; cardTopClass = 'top-1';
+                } else if (p.dynamicRank === 2) {
+                    rankClass = 'rank-2'; cardTopClass = 'top-2';
+                } else if (p.dynamicRank === 3) {
+                    rankClass = 'rank-3'; cardTopClass = 'top-3';
+                }
+
+                const tierClass = getTierClass(p.tier);
+
+                const card = document.createElement('div');
+                card.className = `participant-card ${cardTopClass}`;
+
+                card.innerHTML = `
+                    <div class="left-group">
+                        <div class="rank-icon-badge ${rankClass}">${p.dynamicRank}</div>
+                        <img src="${p.avatar || defaultAvatar}" class="avatar-box" alt="${p.name}" onerror="this.src='${defaultAvatar}'">
+                        <div class="user-details">
+                            <div class="user-header">
+                                <span class="user-name">${p.name}</span>
+                                <span class="software-badge" title="Software: ${softwareFull}">${p.software}</span>
+                            </div>
+                            <span class="user-points" title="Points calculated based on Tier ${p.tier} base value (${points} pts)">${points} points</span>
+                        </div>
+                    </div>
+                    <div class="right-group">
+                        <span class="tier-pill ${tierClass}">${p.tier}</span>
+                        <a href="${p.youtube || '#'}" target="_blank" class="watch-btn">
+                            ▶ Watch Channel
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('totalCount').innerText = finalDisplayList.length;
+            container.classList.add('fade-in-active');
+        }
+
+        /* --- FUNGSI MODAL DISCORD --- */
+        const modal = document.getElementById('discordModal');
+
+        function openDiscordModal() {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+
+        function closeDiscordModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function handleOverlayClick(event) {
+            if (event.target === modal) {
+                closeDiscordModal();
+            }
+        }
+
+        renderLeaderboard();
+    </script>
+</body>
+</html>
