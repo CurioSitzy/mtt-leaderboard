@@ -558,10 +558,6 @@
                     <option value="AE">After Effects (AE)</option>
                     <option value="AM">Alight Motion (AM)</option>
                     <option value="IS">InShot (IS)</option>
-                    <!-- Tambahan Opsi Software Baru -->
-                    <option value="HF">HitFilm (HF)</option>
-                    <option value="CPC">CapCut PC (CPC)</option>
-                    <option value="PR">Premiere Pro (PR)</option>
                 </select>
 
                 <select id="tierFilter" class="filter-select" onchange="renderLeaderboard()">
@@ -620,9 +616,6 @@
             "AE": "After Effects",
             "AM": "Alight Motion",
             "IS": "InShot",
-            "HF": "HitFilm",
-            "CPC": "CapCut PC",
-            "PR": "Premiere Pro",
             "-": "Unknown / Not Specified"
         };
 
@@ -642,10 +635,7 @@
             { id: 10, name: "Galaxy_Fx",                    tier: "LT4", overallRank: 7, software: "CC", youtube: "https://www.youtube.com/@GALAXYFX-db4", avatar: "https://yt3.googleusercontent.com/efkGOEd-Ct5dA_XVtHEzVFP0QTZ5aKLJSzhKidfQU22-rhYBks083mBKHwZu-OphfGhUntb20Ho=s160-c-k-c0x00ffffff-no-rj" },
             { id: 11, name: "ImShriXD",                     tier: "LT4", overallRank: 7, software: "IS", youtube: "https://www.youtube.com/@loose_wires", avatar: "https://yt3.googleusercontent.com/XaS6xAHJa2kLbEXAQ-utIMK618bviuxs5cpxT2_bh4DzpLf2rkvxCwZfzjebXUZTQd1CdPZ5M5k=s160-c-k-c0x00ffffff-no-rj" },
             { id: 12, name: "NØRıKO",                       tier: "LT4", overallRank: 7, software:  "-", youtube:  "https://www.youtube.com/@vantaamc", avatar: "https://yt3.googleusercontent.com/N0hprpUVt6rZEMPGKyoytNxLmCfg_e-0LIxYmvhMoGXTAd52T7DEQzDudmWXVRo-CRXmYdC_Qw=s160-c-k-c0x00ffffff-no-rj" },
-            { id: 13, name: "NotAbyss",                     tier: "LT5", overallRank: 8, software: "CC", youtube: "https://www.youtube.com/@NotAbyssOG", avatar: "https://yt3.googleusercontent.com/H_BWyEHpqOF2KuZpnjPphkoSnLSKpXXfNF2L80hP_Yzo0xWLph7yxzay5Wa4fBcmaywnhPCB=s160-c-k-c0x00ffffff-no-rj" },
-            /* Tambahan Data Editor Contoh */
-            { id: 14, name: "HazaAE",                      tier: "HT2", overallRank: 1, software: "AE", youtube: "https://www.youtube.com", avatar: "" },
-            { id: 15, name: "ZynxVisuals",                 tier: "HT3", overallRank: 2, software: "PR", youtube: "https://www.youtube.com", avatar: "" }
+            { id: 13, name: "NotAbyss",                     tier: "LT5", overallRank: 8, software: "CC", youtube: "https://www.youtube.com/@NotAbyssOG", avatar: "https://yt3.googleusercontent.com/H_BWyEHpqOF2KuZpnjPphkoSnLSKpXXfNF2L80hP_Yzo0xWLph7yxzay5Wa4fBcmaywnhPCB=s160-c-k-c0x00ffffff-no-rj" }
         ];
 
         function getTierClass(tier) {
